@@ -111,12 +111,58 @@ hr {
     font-weight: 300;
 }
 
+#newcont {
+    margin-bottom: 0;
+    min-height: 0;
+    height: auto;
+    resize: none; 
+    /* overflow: overlay; */
+}
+
+
+.circle {
+    max-width: min-content !important;
+}
+
+.numberCircle>img {
+    width: 1rem;
+}
+
+.arrow>img {
+    width: 1rem;
+    max-width: 1rem;
+    margin-left: auto;
+    display: none;
+    transition: transform .2s ease-out;
+}
+
+.arrow.showarrow.rotated>img {
+    transform: rotate(90deg);
+}
+
+.arrow.showarrow>img {
+    display: unset;
+}
+
+.arrow {
+    max-width: 1rem !important;
+    width: 1rem !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.checked {
+    opacity: 0.4;
+}
+
+
 /* Mobile screen */
 @media (max-width: 40.0rem) {
-    .row .column.column-20{
+    /* .row .column.column-20{
         flex: 0 0 100%;
         max-width: 100%;
-    }
+    } */
     .collapsible > label::before {
         margin-left: -1rem; 
     }

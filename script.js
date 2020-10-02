@@ -14,6 +14,168 @@
 const { el, mount } = redom;
 
 
+/* function togglecontenteditable (e,data) {
+    if (card.childElementCount != 0) return //textarea is already activated
+    //e.preventDefault()
+    var current = this.innerText
+    this.innerHTML = '<div id="newcont" contenteditable>'+current+'</div>'
+    const newcont = document.getElementById('newcont');
+    newcont.focus()
+    
+    newcont.addEventListener('keydown',function (e) {
+        if (!e.shiftKey && e.key == "Enter") {
+            this.blur()
+            return false;
+        }
+    })
+    
+    newcont.addEventListener('blur',function (e) {
+        card.innerText = this.innerText
+    })
+} */
+/* 
+card.addEventListener('dblclick', togglecontenteditable)
+
+
+// card.setAttribute('data-long-press-delay', 1500);
+// card.addEventListener('long-press', togglecontenteditable)
+
+
+ */
+
+
+
+
+
+
+var list = document.getElementById("list")
+
+
+function createTodo(data) {
+    let div_item = el(".item.row",{ id: data._id })
+    let div_circle = el(".column.circle")
+    let div_arrow = el(".column.arrow",el("img.float-right", {src: "https://res.cloudinary.com/demo/image/fetch/https://www.svgrepo.com/show/92420/right-arrow.svg"}))
+    let div_numberCircle = el(".numberCircle.float-right")
+
+    if (data.checked == "false") {
+        div_numberCircle.innerText = data.priority
+    } else {
+        div_item.classList.add("checked")
+        let img_checked = el("img", {src: "https://res.cloudinary.com/demo/image/fetch/https://www.svgrepo.com/show/101837/correct-signal.svg"})
+
+        div_numberCircle.append(img_checked)
+    }
+
+    div_circle.append(div_numberCircle)
+    div_item.append(div_arrow)
+    div_item.append(div_circle)
+
+    div_circle.addEventListener('click',function (e) {
+        if (data.checked == "true") {
+            data.checked = "false"
+            div_numberCircle.innerText = data.priority
+            div_item.classList.remove("checked")
+        } else {
+            data.checked = "true"
+            div_item.classList.add("checked")
+            let img_checked = el("img", {src: "https://res.cloudinary.com/demo/image/fetch/https://www.svgrepo.com/show/101837/correct-signal.svg"})
+    
+            div_numberCircle.innerText = ""
+            div_numberCircle.append(img_checked)
+        }
+    })
+
+
+    let div_80 = el(".column.column-80",{innerText : data.value})    
+
+
+    div_80.addEventListener('dblclick', function (e) {
+        if (this.getAttribute("contenteditable")=="true") return
+
+        this.setAttribute("contenteditable", "true")
+        this.focus()
+        
+        this.addEventListener('keydown',function (e) {
+            if ((!e.shiftKey && e.key == "Enter") || e.key == "Escape") {
+                this.blur()
+                return false
+            }
+        })
+    
+        this.addEventListener('blur',function (e) {
+            this.setAttribute("contenteditable", "false")
+        })
+    })
+
+    div_item.append(div_80)
+    
+
+    /* let div_column = el(".column",el(".buttons.row",el(".column.delete",{innerText: "x"})))
+    div_item.append(div_column) */
+
+
+    return div_item
+}
+
+function toogleBetween(value,first,second) {
+    if (value == first) {
+        value = second
+    } else if (value == second) {
+        value = first
+    }
+}
+
+function createChild(data) {
+    /* 
+    
+    <div class="collapsible item">
+        <input id="collapsible-3" type="checkbox">
+        <label for="collapsible-3" style="margin: 0;">
+            orig
+        </label>
+        <div class="indent collapsible-content">
+
+            child1
+
+            <hr>
+
+            child2
+
+        </div>
+    </div>
+    
+    */
+
+
+    let parent = document.getElementById(data.parent)
+    let arrow = parent.getElementsByClassName("arrow")[0]
+    let child = createTodo(data)
+
+    let div_indents = document.getElementsByClassName("parent-"+data.parent)
+    let div_indent
+    if (div_indents[0]) {
+        div_indent = div_indents[0]
+    } else {
+        div_indent = document.createElement("div")
+        div_indent.classList.add("indent","parent-"+data.parent)
+        arrow.classList.add("showarrow","rotated")
+        arrow.addEventListener('click',function (e) {
+            if (div_indent.style.display == "") {
+                div_indent.style.display = "none"
+                this.classList.remove("rotated")
+            } else {
+                div_indent.style.display = ""
+                this.classList.add("rotated")
+            }
+        })
+    }
+    
+    div_indent.append(document.createElement("hr"))
+    div_indent.append(child)
+    parent.after(div_indent)  
+}
+
+
 fetch("https://api.todo.app.5ls.de/abcdefghijklmnopqrtsvwxyz")
         .then((response) => {
             if (response.ok) {
