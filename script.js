@@ -53,8 +53,20 @@ function setRemoteData(method, data) {
         .then((response) => {
             return response.json()
         })
-        .then((data) => {
-            console.log(data)
+        .then((response) => {
+            console.log(response)
+            if (method =='POST') {
+                data._createdOn = response._createdOn
+                data._id = response._id
+
+                if (data.parent && data.parent != "") {
+                    createChild(data)
+                } else {
+                    list.append(createTodo(data))
+                    list.append(document.createElement("hr"))
+                }
+            }           
+        
         })
         .catch((error) => {
             console.log('Request failed', error)
@@ -267,13 +279,17 @@ fetch("https://api.todo.app.5ls.de/abcdefghijklmnopqrtsvwxyz")
                 }
             }
 
+            let btn_add = el("button",{innerText: "+"})
+            btn_add.addEventListener("click", function (e) {
+                let newTodo = {
+                    checked: "false",
+                    priority: "",
+                    value: ""
+                }
+                setRemoteData('POST',newTodo)
+            })
 
-
-
-
-
-
-
+            list.parentElement.append(btn_add)
         })
         .catch((error) => {
             console.log('Request failed', error)

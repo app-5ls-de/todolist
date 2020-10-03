@@ -144,6 +144,18 @@ hr {
     display: unset;
 }
 
+.parent .column.delete {
+    display: none;
+}
+
+.column.add {
+    display: none;
+}
+
+div[class^="parent-"] .column.add {
+    display: block;
+}
+
 
 
 .dropdown {
