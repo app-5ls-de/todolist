@@ -14,38 +14,53 @@
 const { el, mount } = redom;
 
 
-/* function togglecontenteditable (e,data) {
-    if (card.childElementCount != 0) return //textarea is already activated
-    //e.preventDefault()
-    var current = this.innerText
-    this.innerHTML = '<div id="newcont" contenteditable>'+current+'</div>'
-    const newcont = document.getElementById('newcont');
-    newcont.focus()
+function setRemoteData(method, data) {
+    data.key = "tempkey"
+
+    if (!data.key) {
+        return
+    }
+
+    if (!['POST','PUT','DELETE'].includes(method)) return
+
+    let url = "https://api.todo.app.5ls.de/abcdefghijklmnopqrtsvwxyz"
+
+    if (['PUT','DELETE'].includes(method)) {
+        url += '/' + data._id
+    }
     
-    newcont.addEventListener('keydown',function (e) {
-        if (!e.shiftKey && e.key == "Enter") {
-            this.blur()
-            return false;
-        }
-    })
-    
-    newcont.addEventListener('blur',function (e) {
-        card.innerText = this.innerText
-    })
-} */
-/* 
-card.addEventListener('dblclick', togglecontenteditable)
+
+    data._createdOn = undefined
+    data._id = undefined
+
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': data.key
+        },
+        body: JSON.stringify(data)
+    }
 
 
-// card.setAttribute('data-long-press-delay', 1500);
-// card.addEventListener('long-press', togglecontenteditable)
-
-
- */
-
-
-
-
+    fetch(url, options)
+        .then((response) => {
+            if (response.ok) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error(response.statusText))
+            }
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((error) => {
+            console.log('Request failed', error)
+        })
+}
 
 
 var list = document.getElementById("list")
@@ -83,6 +98,7 @@ function createTodo(data) {
             div_numberCircle.innerText = ""
             div_numberCircle.append(img_checked)
         }
+        setRemoteData('PUT',data)
     })
 
 
@@ -104,6 +120,8 @@ function createTodo(data) {
     
         this.addEventListener('blur',function (e) {
             this.setAttribute("contenteditable", "false")
+            data.value = this.innerText
+            setRemoteData('PUT',data)
         })
     })
 
@@ -126,26 +144,6 @@ function toogleBetween(value,first,second) {
 }
 
 function createChild(data) {
-    /* 
-    
-    <div class="collapsible item">
-        <input id="collapsible-3" type="checkbox">
-        <label for="collapsible-3" style="margin: 0;">
-            orig
-        </label>
-        <div class="indent collapsible-content">
-
-            child1
-
-            <hr>
-
-            child2
-
-        </div>
-    </div>
-    
-    */
-
 
     let parent = document.getElementById(data.parent)
     let arrow = parent.getElementsByClassName("arrow")[0]
