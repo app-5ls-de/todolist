@@ -147,6 +147,7 @@ function createChild(data) {
     let parent = document.getElementById(data.parent)
     let arrow = parent.getElementsByClassName("arrow")[0]
     let child = createTodo(data)
+    child.classList.add("child")
 
     let div_indents = document.getElementsByClassName("parent-"+data.parent)
     let div_indent
@@ -155,6 +156,7 @@ function createChild(data) {
     } else {
         div_indent = document.createElement("div")
         div_indent.classList.add("indent","parent-"+data.parent)
+        parent.classList.add("parent")
         arrow.classList.add("showarrow","rotated")
         arrow.addEventListener('click',function (e) {
             if (div_indent.style.display == "") {
