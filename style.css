@@ -144,6 +144,34 @@ hr {
     display: unset;
 }
 
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropcontent {
+    display: none;
+    position: absolute;
+    /* background-color: #f1f1f1;
+    min-width: 160px; */
+    overflow: auto;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    z-index: 1;
+}
+
+
+.dropcontent.show {
+    display: block;
+}
+
+
+
+
+
+
+
 .arrow {
     max-width: 1rem !important;
     width: 1rem !important;

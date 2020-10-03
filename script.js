@@ -126,9 +126,65 @@ function createTodo(data) {
 
     div_item.append(div_80)
     
+    let div_delete = el(".column.delete",{innerText: "x"})
+    let div_buttons = el(".buttons.row")
+    let div_column = el(".column")
 
-    /* let div_column = el(".column",el(".buttons.row",el(".column.delete",{innerText: "x"})))
-    div_item.append(div_column) */
+    div_delete.addEventListener('click', function (e) {
+        setRemoteData('DELETE',data)
+        div_item.remove()
+    })
+
+    let div_dropdown = el(".column.dropdown")
+    let div_dropbtn = el(".dropbtn",{innerText: "*"})
+    let div_dropcontent = el(".dropcontent")
+
+    let prioritys = ["A","B","C","D","E"]
+    prioritys.forEach((element) => {
+        function middleware(el) {
+            el.addEventListener("click", (e) => {
+                data.priority = element
+                div_numberCircle.innerText = data.priority
+                setRemoteData('PUT',data)
+            })
+        }
+        div_dropcontent.append(el(".dropbtn",middleware,{innerText: element}))
+    })
+
+    div_dropbtn.addEventListener("click", function (e) {
+        if (div_dropcontent.classList.contains('show')) {
+            div_dropcontent.classList.remove('show');
+        } else {
+            div_dropcontent.classList.add('show');
+        }
+        
+    })
+
+
+
+    div_dropdown.append(div_dropbtn)
+    div_dropdown.append(div_dropcontent)
+    div_buttons.append(div_dropdown)
+
+
+
+
+    let div_add = el(".column.add",{innerText: "+"})
+    div_add.addEventListener("click", function (e) {
+        let newTodo = {
+            checked: "false",
+            priority: "",
+            value: "",
+            parent: data._id
+        }
+        setRemoteData('POST',newTodo)
+    })
+
+    div_buttons.append(div_add)
+
+    div_buttons.append(div_delete)
+    div_column.append(div_buttons)
+    div_item.append(div_column)
 
 
     return div_item
