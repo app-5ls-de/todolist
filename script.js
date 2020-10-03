@@ -227,12 +227,14 @@ function createChild(data) {
         parent.classList.add("parent")
         arrow.classList.add("showarrow","rotated")
         arrow.addEventListener('click',function (e) {
-            if (div_indent.style.display == "") {
-                div_indent.style.display = "none"
+            if (div_indent.classList.contains('collapsed')) {
                 this.classList.remove("rotated")
-            } else {
                 div_indent.style.display = ""
+                setTimeout(function () { div_indent.classList.remove('collapsed')} , 0)
+            } else {
                 this.classList.add("rotated")
+                div_indent.classList.add('collapsed');
+                setTimeout(function () { div_indent.style.display = "none" } , 250)
             }
         })
     }
