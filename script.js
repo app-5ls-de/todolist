@@ -15,11 +15,11 @@ const { el, mount } = redom;
 
 
 function setRemoteData(method, data) {
-    data.key = "tempkey"
+    /* data.key = "tempkey"
 
     if (!data.key) {
         return
-    }
+    } */
 
     if (!['POST','PUT','DELETE'].includes(method)) return
 
@@ -36,8 +36,7 @@ function setRemoteData(method, data) {
     const options = {
         method: method,
         headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': data.key
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     }
