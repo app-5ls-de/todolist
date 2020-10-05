@@ -1,77 +1,18 @@
 
-body {
+body, a {
     color: #394147;
 }
 
-
-.numberCircle {
-    background: #fff;
-    text-align: center;
-    color: #666;
-    border: 0.1em solid #666;
-    border-radius: 50%;    
-    width: 1.5em;
-    height: 1.5em;
-    line-height: 1.5em;
-    box-sizing: content-box;   
-}
-
-hr {
-    border-top: 0.1rem solid #cacaca;
-    margin: 0.5em 0;
-}
-
-.collapsible > input[type='checkbox'] {
-    display: none;
-}
-.collapsible > label {
-    cursor: pointer;
-    transition: all 0.25s ease-out;
-}
-.collapsible > label::before {
-    content: ' ';
-    display: inline-block;
-    border-top: 0.5rem solid transparent;
-    border-bottom: 0.5rem solid transparent;
-    border-left: 0.5rem solid currentColor;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-    transform: translateY(-0.1rem);
-    transition: transform .2s ease-out;
-}
-.collapsible > input:checked + label::before {
-    transform: rotate(90deg) translateX(-3px);
-}
-.collapsible > .collapsible-content {
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height .25s ease-in-out;
-}
-.collapsible > input:checked + label  + .collapsible-content {
-    max-height: 100vh;
-}
-
-
-
-.indent{
-    opacity: 1;
-    margin-left: 3rem;
-    transition: opacity .25s ease-in-out;
-}
-
-.indent.collapsed {
-    opacity: 0;
-    overflow: hidden;
-}
-
-.meter { 
+.progress { 
 	height: 12px; 
     background-color: #f1f1f1!important; 
     padding: 3px;
     border-radius: 3px;
     margin: 1rem 0;
+    position: relative;
 }
-.meter > span.indicator {
+
+.progress > .progressbar {
     height: 100%;
     display: block;
     background-color: #4caf50; 
@@ -79,163 +20,7 @@ hr {
     transition: width 500ms ease-in-out;
 }
 
-.row {
-    flex-direction: row;
-    margin-left: -1.0rem;
-    width: calc(100% + 2.0rem);
-}
-.row .column {
-    margin-bottom: inherit;
-    padding: 0 1.0rem;
-}
-
-.row .column.column-10 {
-    min-width: min-content;
-}
-/* Smaller than tablet screen */
-@media (max-width: 80.0rem) {
-    .dritteln{
-        flex-direction: column;
-    }
-    .row .column.column-80{
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-    .row .column.column-20{
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
-
-.buttons {
-    display: none;
-}
-
-.item:hover .buttons {
-    display: flex;
-}
-
-.list label {
-    font-weight: 300;
-}
-
-#newcont {
-    margin-bottom: 0;
-    min-height: 0;
-    height: auto;
-    resize: none; 
-    /* overflow: overlay; */
-}
-
-
-.circle {
-    max-width: min-content !important;
-}
-
-.numberCircle>img {
-    width: 1rem;
-}
-
-.arrow>img {
-    width: 1rem;
-    max-width: 1rem;
-    margin-left: auto;
-    display: none;
-    transition: transform .2s ease-out;
-}
-
-.arrow.showarrow.rotated>img {
-    transform: rotate(90deg);
-}
-
-.arrow.showarrow>img {
-    display: unset;
-}
-
-.parent .column.delete {
-    display: none;
-}
-
-.column.add {
-    display: none;
-}
-
-div[class^="parent-"] .column.add {
-    display: block;
-}
-
-
-
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropcontent {
-    display: none;
-    position: absolute;
-    /* background-color: #f1f1f1;
-    min-width: 160px; */
-    overflow: auto;
-    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
-    z-index: 1;
-}
-
-
-.dropcontent.show {
-    display: block;
-}
-
-
-
-
-
-
-
-.arrow {
-    max-width: 1rem !important;
-    width: 1rem !important;
-    display: flex !important;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.checked {
-    opacity: 0.4;
-}
-
-
-/* Mobile screen */
-@media (max-width: 40.0rem) {
-    /* .row .column.column-20{
-        flex: 0 0 100%;
-        max-width: 100%;
-    } */
-    .collapsible > label::before {
-        margin-left: -1rem; 
-    }
-}
-
-/* Larger than mobile screen */
-@media (min-width: 40.0rem) {
-    
-}
-
-
-/* Larger than tablet screen */
-@media (min-width: 80.0rem) {
-    /* body{
-        background-color: green;
-    } */
-}
-
-
-
-.tooltip {
-    position: relative;
-}
-
-.tooltip .tooltiptext {
+.progress > .progresstext {
     visibility: hidden;
     width: 8rem;
     background-color: #555;
@@ -252,7 +37,7 @@ div[class^="parent-"] .column.add {
     transition: opacity 0.3s;
 }
 
-.tooltip .tooltiptext::after {
+.progress > .progresstext::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -263,7 +48,101 @@ div[class^="parent-"] .column.add {
     border-color: #555 transparent transparent transparent;
 }
 
-.tooltip:hover .tooltiptext {
+.progress:hover  > .progresstext {
     visibility: visible;
     opacity: 1;
+} 
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+    margin: 3rem;
+}
+
+.main {
+    flex-grow: 1;
+    margin-right: 3rem;
+}
+
+.side {
+    /* opacity: 0; */
+    transition: opacity 0.3s;
+}
+
+.side:hover {
+    opacity: 1;
+}
+
+
+.todos {
+
+}
+
+.todo {
+    width: 100%;
+    min-height: 1rem;
+    color: black;
+}
+
+.todo.checked {
+    /* text-decoration: line-through; */
+    /* color: darkgray; */
+    /* opacity: 0.5; */
+}
+
+.todo.checked>span{
+    color: darkgray;
+}
+
+.todo.edit>span{
+    color: black;
+    display: inline;
+}
+
+.todo>.priority {
+    color: red;
+}
+
+.todo>.date {
+    color: darkgray;
+    display: none;
+}
+
+.todo>.project {
+    color: darkorange;
+}
+
+.todo>.context {
+    color: green;
+}
+
+.todo>.punctuation {
+    color: darkgray;
+}
+
+.todo>.key {
+    color: blue;
+}
+
+.todo>.value {
+    color: goldenrod;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+}
+
+.option {
+    padding: 5px 1rem;
+    margin: 5px;
+    margin-left: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.option.selected {
+    background-color: #ff980091;
 }

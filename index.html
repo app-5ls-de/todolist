@@ -32,46 +32,54 @@
 
 <body>
 
+
     <div class="container">
-        <br>
-        <div class="row dritteln">
-            <div class="column column-80" style="margin-bottom: 5rem;">
-                <h1>Putzen</h1>
-
-                <div class="meter tooltip">
-                    <span class="tooltiptext">13/35</span>
-                    <span class="indicator" style="width: 33%"></span>
-                </div>
-
-                <div class="container" id="list">
-                    
-
-                </div>
+        <div class="main">
+            <h1>Todos</h1>
+            <div class="progress">
+                <span class="progresstext">0/0</span>
+                <span class="progressbar" style="width: 70%"></span>
             </div>
-            <div class="column column-20">
-                <div class="container">
 
-                    <div class="collapsible">
-                        <input id="collapsible-1" type="checkbox" checked>
-                        <label for="collapsible-1">Studium</label>
-                        <div class="indent collapsible-content">
-                            Organisation
-                            <br>
-                            Lernen
-                        </div>
-                    </div>
+            <div class="todos" id="list">
+                <hr>
+                <div class="todo edit" id="newTodo" contenteditable="true"></div>
+            </div>
 
-                    <div class="collapsible">
-                        <input id="collapsible-2" type="checkbox" checked>
-                        <label for="collapsible-2">Haushalt</label>
-                        <div class="indent collapsible-content"
-                            style="background-color: #ff980091; border-radius: 5px;padding-left: 1rem;margin-left: 2rem;">
-                            Putzen
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="side">
+            <div class="lists">
+                <h2>Lists</h2>
+                <ul>
+                    <li><a href="/?id=1">first list</a></li>
+                </ul>
+            </div>
+            <div class="project">
+                <h2>Project</h2>
+                <ul>
+                    <li><a href="/?id=this&project">M4</a></li>
+                </ul>
+            </div>
+            <h2>Context</h2>
+            <div class="context options">
+                <a class="option selected" href="/">
+                    Putzen
+                </a>
+                <a class="option" href="/">
+                    Putzen
+                </a>
+
+            </div>
+            <div class="filter">
+                <h2>Filter</h2>
+                <ul>
+                    <li><button>M4</button></li>
+                </ul>
             </div>
         </div>
+
+    </div>
+    <div class="footer">
     </div>
     <script src="https://cdn.jsdelivr.net/npm/redom@3.27.1"></script>
     <script src="/script.js"></script>
