@@ -37,44 +37,30 @@
         <div class="main">
             <h1>Todos</h1>
             <div class="progress">
-                <span class="progresstext">0/0</span>
-                <span class="progressbar" style="width: 70%"></span>
+                <span class="progresstext" id="progresstext">0/0</span>
+                <span class="progressbar" id="progressbar" style="width: 0%"></span>
             </div>
 
-            <div class="todos" id="list">
-                <hr>
+            <div class="todos" id="todos">
                 <div class="todo edit" id="newTodo" contenteditable="true"></div>
             </div>
 
         </div>
         <div class="side">
-            <div class="lists">
-                <h2>Lists</h2>
-                <ul>
-                    <li><a href="/?id=1">first list</a></li>
-                </ul>
+            <h2>Lists</h2>
+            <div class="lists options" id="lists">
             </div>
-            <div class="project">
-                <h2>Project</h2>
-                <ul>
-                    <li><a href="/?id=this&project">M4</a></li>
-                </ul>
-            </div>
-            <h2>Context</h2>
-            <div class="context options">
-                <a class="option selected" href="/">
-                    Putzen
-                </a>
-                <a class="option" href="/">
-                    Putzen
-                </a>
 
+            <h2>Project</h2>
+            <div class="project options" id="projects">
             </div>
-            <div class="filter">
+
+            <h2>Context</h2>
+            <div class="context options" id="contexts">
+            </div>
+
+            <div class="filter options" id="filters">
                 <h2>Filter</h2>
-                <ul>
-                    <li><button>M4</button></li>
-                </ul>
             </div>
         </div>
 

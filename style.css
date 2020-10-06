@@ -83,6 +83,8 @@ body, a {
     width: 100%;
     min-height: 1rem;
     color: black;
+    border-top: 1px solid lightgray;
+    padding: 0.5rem 0;
 }
 
 .todo.checked {
@@ -145,4 +147,8 @@ body, a {
 
 .option.selected {
     background-color: #ff980091;
+}
+
+.filter {
+    display: none;
 }

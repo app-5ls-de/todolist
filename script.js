@@ -34,6 +34,59 @@ var state = {
     }
 }
 
+
+function setRemoteData(method, todo, id) {
+    if (!state.key) {
+        return
+    }
+
+    if (!['POST','PUT','DELETE'].includes(method)) return
+
+    let url = apiOrigin + '/' + state.id
+
+    if (['PUT','DELETE'].includes(method)) {
+        if (id) {
+            url += '/' + id
+        } else {
+            console.error("no id")
+        }
+    }
+    
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            type: "todo",
+            todo: todo
+        })
+    }
+
+
+    fetch(url, options)
+        .then((response) => {
+            if (response.ok) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error(response.statusText))
+            }
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((response) => {
+            console.log(response)
+            if (method =='POST') {
+                addTodo(response.todo,response._id)
+            }           
+        
+        })
+        .catch((error) => {
+            console.log('Request failed', error)
+        })
+}
+
 function stripWhitespace(string) {
     return string.replace(/\s+/g, " ").trim()
 }
@@ -207,78 +260,77 @@ function createTodo(array,id) {
             newContent = stripWhitespace(newContent)
             if (newContent){
                 setRemoteData('PUT',newContent,id)
-                mount(list,createTodo(parse(newContent),id),div_todo,true)
+
+                addTodo(newContent,id)
+                showTodos()
             } else {
                 setRemoteData('DELETE',"",id)
-                div_todo.remove()
-                let hr = document.getElementById("hr-"+id)
-                if (hr) hr.remove()
+                addTodo("",id)
             }
         })
     })
     return div_todo
 }
 
-function renderTodo(element,id) {
-    mount(div_list,element,div_newTodo)
-    mount(div_list,el("hr#hr-"+id),div_newTodo)
+function addTodo(todo,id) {
+    if (!id) console.error("no id")
+    if (todo) {
+        state.todos[id] = {}
+        state.todos[id].array = parse(todo)
+        state.todos[id].el = createTodo(state.todos[id].array,id)
+    } else {
+        state.todos[id] = undefined
+    }
 }
 
+function showTodos() {
+    state.sum.all = 0
+    state.sum.checked = 0
 
-function setRemoteData(method, todo, id) {
-    if (!state.key) {
-        return
-    }
+    console.log(state.todos)
 
-    if (!['POST','PUT','DELETE'].includes(method)) return
 
-    let url = apiOrigin + '/' + state.id
 
-    if (['PUT','DELETE'].includes(method)) {
-        if (id) {
-            url += '/' + id
-        } else {
-            console.error("no id")
+
+
+    let contexts = new Set()
+    let projects = new Set()
+    for (const id in state.todos) {
+        state.sum.all += 1   
+        if (state.todos.hasOwnProperty(id)) {
+            const todo = state.todos[id]
+            mount(div_list,todo.el,div_newTodo)
+
+            todo.array.forEach(element => {
+                if (typeof element == "object") {
+                    let type = Object.keys(element)[0]
+                    if (type == "checked") state.sum.checked += 1    
+                    if (type == "project") projects.add(element[type])
+                    if (type == "context") contexts.add(element[type])                
+                }
+            })
         }
     }
+
+    document.getElementById("progresstext").innerText = state.sum.checked + "/" + state.sum.all
+    document.getElementById("progressbar").style.width = state.sum.checked/state.sum.all * 100 + "%"
+
+    let div_projects = document.getElementById("projects")
+    projects.forEach(element => {
+        mount(div_projects,el("a.option",element))
+    })
+
+    let div_contexts = document.getElementById("contexts")
+    contexts.forEach(element => {
+        mount(div_contexts,el("a.option",element))
+    })
     
-    const options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            type: "todo",
-            todo: todo
-        })
-    }
-
-
-    fetch(url, options)
-        .then((response) => {
-            if (response.ok) {
-                return Promise.resolve(response)
-            } else {
-                return Promise.reject(new Error(response.statusText))
-            }
-        })
-        .then((response) => {
-            return response.json()
-        })
-        .then((response) => {
-            console.log(response)
-            if (method =='POST') {
-                renderTodo(createTodo(parse(response.todo),response._id),response._id)
-            }           
-        
-        })
-        .catch((error) => {
-            console.log('Request failed', error)
-        })
 }
 
 
-var div_list = document.getElementById("list")
+
+
+var div_list = document.getElementById("todos")
 
 const params = new URL(location.href).searchParams
 state.id = params.get('id')
@@ -316,10 +368,11 @@ fetch(apiOrigin + '/' + state.id)
         .then((data) => {
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
-                     if (data[i].todo) {
-                        renderTodo(createTodo(parse(data[i].todo),data[i]._id),data[i]._id)
+                    if (data[i].todo) {
+                        addTodo(data[i].todo,data[i]._id)
                     }
                 }
+                showTodos()
             }
         })
         .catch((error) => {
@@ -354,8 +407,12 @@ div_newTodo.addEventListener('blur',function (e) {
     newTodoHandler(this.innerText)
     this.innerText = ""
 })
-/* mount(div_list,createTodo(parse("x 2020-10-04 2020-02-04 This is a note @uni +T3 due:2020-11-23")))
-mount(div_list,el("hr"))
-mount(div_list,createTodo(parse("(A) 2020-02-04 This is a note @uni +T3 due:2020-11-23")))
-mount(div_list,el("hr"))
-mount(div_list,createTodo(parse("(A) 2020-02-04 This is a note "))) */
+
+
+var div_lists = document.getElementById("lists")
+for (const key in localStorage) {
+    if (localStorage.hasOwnProperty(key)) {
+        const element = localStorage[key];
+        mount(div_lists,el("a.option",{href: location.origin + "?/id=" + key, innerText: key}))
+    }
+}
