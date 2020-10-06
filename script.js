@@ -413,6 +413,6 @@ var div_lists = document.getElementById("lists")
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
         const element = localStorage[key];
-        mount(div_lists,el("a.option",{href: location.origin + "?/id=" + key, innerText: key}))
+        mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
     }
 }
