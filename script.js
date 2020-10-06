@@ -158,18 +158,18 @@ function createTodo(array,id) {
             switch (type) {
                 case "checked":         mount(div_todo,el("span.x","x"));
                                         div_todo.classList.add("checked"); break;
-                case "priority":        mount(div_todo,el("span.punctuation","("));
+                case "priority":        mount(div_todo,el("span.priority.punctuation","("));
                                         mount(div_todo,el("span.priority",element[type]));
-                                        mount(div_todo,el("span.punctuation",")")); break;
+                                        mount(div_todo,el("span.priority.punctuation",")")); break;
                 case "completionDate":  mount(div_todo,el("span.date",element[type])); break;
                 case "creationDate":    mount(div_todo,el("span.date",element[type])); break;
-                case "project":         mount(div_todo,el("span.punctuation","+"));
+                case "project":         mount(div_todo,el("span.project.punctuation","+"));
                                         mount(div_todo,el("span.project",element[type])); break;
-                case "context":         mount(div_todo,el("span.punctuation","@"));
+                case "context":         mount(div_todo,el("span.context.punctuation","@"));
                                         mount(div_todo,el("span.context",element[type])); break;
-                case "keyvalue":        mount(div_todo,el("span.key",element[type].key));
-                                        mount(div_todo,el("span.punctuation",":"));
-                                        mount(div_todo,el("span.value",element[type].value));
+                case "keyvalue":        mount(div_todo,el("span.keyvalue.key",element[type].key));
+                                        mount(div_todo,el("span.keyvalue.punctuation",":"));
+                                        mount(div_todo,el("span.keyvalue.value",element[type].value));
               }
         }        
         div_todo.append(" ")
