@@ -31,6 +31,11 @@ var state = {
     sum: {
         all: 0,
         checked: 0
+    },
+    filter: {
+        context: [],
+        project: [],
+        filter: []
     }
 }
 
@@ -283,28 +288,82 @@ function addTodo(todo,id) {
     }
 }
 
+function overlap(array1,array2) {
+    return array1.some(r => array2.includes(r))
+}
+
 function showTodos() {
     state.sum.all = 0
     state.sum.checked = 0
+    let filtered = []
+    div_list.textContent = "" //remove all children
+    div_list.append(div_newTodo)
 
-    console.log(state.todos)
-
-
-
-
-
-    let contexts = new Set()
-    let projects = new Set()
+    
+//filter
     for (const id in state.todos) {
-        state.sum.all += 1   
         if (state.todos.hasOwnProperty(id)) {
+            const todo = state.todos[id]
+            let projects = []
+            let contexts = []
+            let checked = false
+            todo.array.forEach(element => {
+                if (typeof element == "object") {
+                    let type = Object.keys(element)[0]
+                    if (type == "checked") checked = true
+                    if (type == "project") projects.push(element[type])
+                    if (type == "context") contexts.push(element[type])    
+                }
+            })
+
+            let show = true
+            if (state.filter.project.length && !overlap(state.filter.project,projects)) show = false
+            if (state.filter.context.length && !overlap(state.filter.context,contexts)) show = false
+
+            if (show) {
+                filtered.push(id)
+            }
+        }
+    }
+
+//sort
+    // alphabetically
+   /*  filtered.sort((a,b) => {
+        if (a is less than b by some ordering criterion) {
+        return -1;
+        }
+        if (a is greater than b by the ordering criterion) {
+        return 1;
+        }
+        // a must be equal to b
+        return 0;
+
+    }) */
+    
+//show
+    filtered.forEach(id => {
+        if (state.todos.hasOwnProperty(id)) {
+            state.sum.all += 1   
             const todo = state.todos[id]
             mount(div_list,todo.el,div_newTodo)
 
             todo.array.forEach(element => {
                 if (typeof element == "object") {
                     let type = Object.keys(element)[0]
-                    if (type == "checked") state.sum.checked += 1    
+                    if (type == "checked") state.sum.checked += 1             
+                }
+            })
+        }
+    })
+
+    let contexts = new Set()
+    let projects = new Set()
+    for (const id in state.todos) {
+        if (state.todos.hasOwnProperty(id)) {
+            const todo = state.todos[id]
+            todo.array.forEach(element => {
+                if (typeof element == "object") {
+                    let type = Object.keys(element)[0]
                     if (type == "project") projects.add(element[type])
                     if (type == "context") contexts.add(element[type])                
                 }
@@ -316,13 +375,45 @@ function showTodos() {
     document.getElementById("progressbar").style.width = state.sum.checked/state.sum.all * 100 + "%"
 
     let div_projects = document.getElementById("projects")
+    div_projects.textContent = "" //remove all children
     projects.forEach(element => {
-        mount(div_projects,el("a.option",element))
+        let a = el("a.option",element)
+        if (state.filter.project.includes(element)) {
+            a.classList.add("selected")
+        }
+        a.addEventListener("click", (e) => {
+            if (state.filter.project.includes(element)) {
+                //a.classList.remove("selected")
+                let index = state.filter.project.indexOf(element)
+                state.filter.project.splice(index,1)
+            } else {
+                //a.classList.add("selected")
+                state.filter.project.push(element)
+            }
+            showTodos()
+        })
+        mount(div_projects,a)
     })
 
     let div_contexts = document.getElementById("contexts")
+    div_contexts.textContent = "" //remove all children
     contexts.forEach(element => {
-        mount(div_contexts,el("a.option",element))
+        let a = el("a.option",element)
+        if (state.filter.context.includes(element)) {
+            a.classList.add("selected")
+        }
+        a.addEventListener("click", (e) => {
+            if (state.filter.context.includes(element)) {
+                //a.classList.remove("selected")
+                let index = state.filter.context.indexOf(element)
+                state.filter.context.splice(index,1)
+            } else {
+                //a.classList.add("selected")
+                state.filter.context.push(element)
+            }
+            showTodos()
+        })
+        mount(div_contexts,a)
     })
     
 }
@@ -413,6 +504,6 @@ var div_lists = document.getElementById("lists")
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
         const element = localStorage[key];
-        mount(div_lists,el("a.option",{href: location.origin + "?/id=" + key, innerText: key}))
+        mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
     }
 }
