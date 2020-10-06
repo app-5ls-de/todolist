@@ -333,7 +333,7 @@ div_newTodo.addEventListener('keydown',function (e) {
         return false
     }
 
-    if (e.key == "Enter") {
+    if (!e.shiftKey && e.key == "Enter") {
         newTodoHandler(this.innerText)
         setTimeout(function () { div_newTodo.innerText = "" },0)
         return false
@@ -341,10 +341,13 @@ div_newTodo.addEventListener('keydown',function (e) {
 })
 
 function newTodoHandler(text) {
-    newContent = stripWhitespace(text)
-    if (newContent){
-        setRemoteData('POST',newContent)
-    }
+    newContent = text.trim().split('\n')
+    newContent.forEach(element => {
+        row = stripWhitespace(element)
+        if (row){
+            setRemoteData('POST',row)
+        }
+    })
 }
 
 div_newTodo.addEventListener('blur',function (e) {
