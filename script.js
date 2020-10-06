@@ -287,7 +287,7 @@ function showTodos() {
     state.sum.all = 0
     state.sum.checked = 0
 
-    console.log(state.todos)
+    //console.log(state.todos)
 
 
 
@@ -296,8 +296,10 @@ function showTodos() {
     let contexts = new Set()
     let projects = new Set()
     for (const id in state.todos) {
-        state.sum.all += 1   
         if (state.todos.hasOwnProperty(id)) {
+            state.sum.all += 1   
+        state.sum.all += 1   
+            state.sum.all += 1   
             const todo = state.todos[id]
             mount(div_list,todo.el,div_newTodo)
 
