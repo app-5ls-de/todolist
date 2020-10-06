@@ -8,6 +8,8 @@ const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/script.js',
+  'https://cdn.jsdelivr.net/npm/redom@3.27.1',
+  'https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css',
   '/style.css',
   '/manifest.json',
   '/favicon.ico',
@@ -52,7 +54,7 @@ self.addEventListener('activate', event => {
 // from the network before returning it to the page.
 self.addEventListener('fetch', event => {
   // Skip cross-origin requests, like those for Google Analytics.
-  if (event.request.url.startsWith(self.location.origin)) {
+  if (event.request.url.startsWith(self.location.origin) || event.request.url.startsWith("https://cdn.jsdelivr.net/")) {
     event.respondWith(
       caches.match(event.request, { ignoreSearch: true }).then(cachedResponse => {
         if (cachedResponse) {

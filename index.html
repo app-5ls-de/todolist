@@ -10,7 +10,7 @@
     <meta name="web_author" content="Patrick Haußmann">
     <link rel="author" href="https://patrickhaussmann.de/" />
     <meta name="language" content="en">
-    
+
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -22,18 +22,52 @@
     <meta name="msapplication-TileColor" content="#960e4d">
     <meta name="msapplication-config" content="/icons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-    
+
     <title>Todo</title>
-    
-    <link rel="stylesheet" href="/normalize.css-v8.0.1/normalize.min.css">
-    <link rel="stylesheet" href="/milligram-v1.4.0/milligram.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css">
     <link rel="stylesheet" href="/style.css">
-    
+
 </head>
 
 <body>
 
-    
+
+    <div class="container">
+        <div class="main">
+            <h1>Todos</h1>
+            <div class="progress">
+                <span class="progresstext" id="progresstext">0/0</span>
+                <span class="progressbar" id="progressbar" style="width: 0%"></span>
+            </div>
+
+            <div class="todos" id="todos">
+                <div class="todo edit" id="newTodo" contenteditable="true"></div>
+            </div>
+
+        </div>
+        <div class="side">
+            <h2>Lists</h2>
+            <div class="lists options" id="lists">
+            </div>
+
+            <h2>Project</h2>
+            <div class="project options" id="projects">
+            </div>
+
+            <h2>Context</h2>
+            <div class="context options" id="contexts">
+            </div>
+
+            <div class="filter options" id="filters">
+                <h2>Filter</h2>
+            </div>
+        </div>
+
+    </div>
+    <div class="footer">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/redom@3.27.1"></script>
     <script src="/script.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
