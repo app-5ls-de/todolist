@@ -298,8 +298,6 @@ function showTodos() {
     for (const id in state.todos) {
         if (state.todos.hasOwnProperty(id)) {
             state.sum.all += 1   
-        state.sum.all += 1   
-            state.sum.all += 1   
             const todo = state.todos[id]
             mount(div_list,todo.el,div_newTodo)
 
