@@ -288,7 +288,7 @@ function addTodo(todo,id) {
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
     } else {
-        state.todos[id] = undefined
+        delete state.todos[id]
     }
 }
 
