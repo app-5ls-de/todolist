@@ -448,12 +448,12 @@ var div_list = document.getElementById("todos")
 const params = new URL(location.href).searchParams
 state.id = params.get('id')
 
-if (!state.id) {
+if (!state.id || !isvalid_id(state.id)) {
     window.location.href = window.location.origin + "/?id=" + random_id() + "&pwd=" + random_uuid()
 }
 
 let key = params.get('pwd')
-if (key) {
+if (key && isvalid_uuid(key)) {
     state.key = key
     window.history.replaceState({}, document.title, "/?id=" + state.id)
     localStorage.setItem(state.id,key)
@@ -525,8 +525,11 @@ div_newTodo.addEventListener('blur',function (e) {
 var div_lists = document.getElementById("lists")
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
-        const element = localStorage[key];
-        mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
+        if (isvalid_id(key)) {
+            mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
+        } else {
+            localStorage.removeItem(key)
+        }
     }
 }
 
