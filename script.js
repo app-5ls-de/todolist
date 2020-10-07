@@ -84,6 +84,7 @@ function setRemoteData(method, todo, id) {
             console.log(response)
             if (method =='POST') {
                 addTodo(response.todo,response._id)
+                showTodos()
             }           
         
         })
@@ -241,7 +242,7 @@ function createTodo(array,id) {
     div_todo.addEventListener('dblclick', function (e) {
         if (this.getAttribute("contenteditable")=="true") return
         this.classList.add("edit")
-        // this.innerText = tostring(array)
+        
 
         this.setAttribute("contenteditable", "true")
         this.focus()
@@ -252,8 +253,10 @@ function createTodo(array,id) {
                 return false
             }
         })
-        let newContent = ""
 
+        let oldContent = this.innerText
+        let newContent = this.innerText
+        
         this.addEventListener('input', function (e) {
             newContent = this.innerText
         })
@@ -261,16 +264,17 @@ function createTodo(array,id) {
         this.addEventListener('blur',function (e) {
             this.setAttribute("contenteditable", "false")
             this.classList.remove("edit")
-
             newContent = stripWhitespace(newContent)
             if (newContent){
-                setRemoteData('PUT',newContent,id)
-
-                addTodo(newContent,id)
-                showTodos()
+                if (newContent != oldContent) {
+                    setRemoteData('PUT',newContent,id)
+                    addTodo(newContent,id)
+                    showTodos()
+                }
             } else {
                 setRemoteData('DELETE',"",id)
                 addTodo("",id)
+                showTodos()
             }
         })
     })
@@ -281,10 +285,11 @@ function addTodo(todo,id) {
     if (!id) console.error("no id")
     if (todo) {
         state.todos[id] = {}
+        state.todos[id].todo = todo
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
     } else {
-        state.todos[id] = undefined
+        delete state.todos[id]
     }
 }
 
@@ -319,6 +324,7 @@ function showTodos() {
             let show = true
             if (state.filter.project.length && !overlap(state.filter.project,projects)) show = false
             if (state.filter.context.length && !overlap(state.filter.context,contexts)) show = false
+            if (state.filter.filter.includes("only unchecked") && checked) show = false 
 
             if (show) {
                 filtered.push(id)
@@ -328,18 +334,16 @@ function showTodos() {
 
 //sort
     // alphabetically
-   /*  filtered.sort((a,b) => {
-        if (a is less than b by some ordering criterion) {
-        return -1;
-        }
-        if (a is greater than b by the ordering criterion) {
-        return 1;
-        }
-        // a must be equal to b
-        return 0;
+    filtered.sort((a,b) => {
+        let todoA = state.todos[a].todo
+        let todoB = state.todos[b].todo
+        if (todoA < todoB) return -1
+        if (todoA > todoB) return 1
 
-    }) */
-    
+        // a must be equal to b
+        return 0
+    })
+        
 //show
     filtered.forEach(id => {
         if (state.todos.hasOwnProperty(id)) {
@@ -383,11 +387,9 @@ function showTodos() {
         }
         a.addEventListener("click", (e) => {
             if (state.filter.project.includes(element)) {
-                //a.classList.remove("selected")
                 let index = state.filter.project.indexOf(element)
                 state.filter.project.splice(index,1)
             } else {
-                //a.classList.add("selected")
                 state.filter.project.push(element)
             }
             showTodos()
@@ -404,11 +406,9 @@ function showTodos() {
         }
         a.addEventListener("click", (e) => {
             if (state.filter.context.includes(element)) {
-                //a.classList.remove("selected")
                 let index = state.filter.context.indexOf(element)
                 state.filter.context.splice(index,1)
             } else {
-                //a.classList.add("selected")
                 state.filter.context.push(element)
             }
             showTodos()
@@ -507,3 +507,67 @@ for (const key in localStorage) {
         mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
     }
 }
+
+var div_filters = document.getElementById("filters")
+let a = el("a.option","only unchecked")
+if (state.filter.filter.includes("only unchecked")) {
+    a.classList.add("selected")
+}
+a.addEventListener("click", (e) => {
+    if (state.filter.filter.includes("only unchecked")) {
+        let index = state.filter.filter.indexOf("only unchecked")
+        state.filter.filter.splice(index,1)
+        a.classList.remove("selected")
+    } else {
+        state.filter.filter.push("only unchecked")
+        a.classList.add("selected")
+    }
+    showTodos()
+})
+mount(div_filters,a)
+
+
+function saveFile(string) {
+    const blob = new Blob([string], { type: 'application/plain' });
+        let filename = "todo.txt"
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }, 0)
+    }
+}
+
+ 
+document.getElementById("download").addEventListener("click", (e) => {
+    let file = []
+    for (const id in state.todos) {
+        if (state.todos.hasOwnProperty(id)) {
+            const element = state.todos[id];
+            file.push(element.todo)
+        }
+    }
+    if (file.length) {
+        file.sort()
+        saveFile(file.join('\n'))
+    }
+})
+
+
+let fileSelector = document.getElementById('file-upload');
+fileSelector.addEventListener('change', (event) => {
+    const fileList = event.target.files
+    console.log(fileList)
+})
+
+document.getElementById("upload").addEventListener("click", (e) => {
+    fileSelector.style.display = "inline-block"
+})

@@ -56,18 +56,13 @@ body, a {
 
 .container {
     display: flex;
-    flex-direction: row;
-    margin: 3rem;
+    flex-direction: column;
+    margin: 1rem;
 }
 
 .main {
     flex-grow: 1;
-    margin-right: 3rem;
-}
-
-.side {
-    /* opacity: 0; */
-    transition: opacity 0.3s;
+    margin-right: 1rem;
 }
 
 .side:hover {
@@ -149,6 +144,54 @@ body, a {
     background-color: #ff980091;
 }
 
-.filter {
+.buttons svg {
+    width: 1rem;
+}
+
+.buttons button {
+    background: transparent;
+    border: none;
+}
+
+.buttons #file-upload {
     display: none;
+    border: solid red;
+    padding: 0.5rem;
+}
+
+.divider {
+    width: 100%;
+    margin: 2rem 0;
+}
+
+
+/* Larger than mobile screen */
+@media (min-width: 40.0rem) {
+    .container {
+        margin: 3rem;
+    }
+
+    .main {
+        margin-right: 3rem;
+    }
+}
+
+
+/* Larger than tablet screen */
+@media (min-width: 80.0rem) {
+    .container {
+        flex-direction: row;
+    }  
+
+    .divider {
+        display: none;
+    }
+}
+
+
+@media (pointer: fine) {
+    .side {
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
 }
