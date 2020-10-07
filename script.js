@@ -602,7 +602,7 @@ document.getElementById("plus").addEventListener("click", (e) => {
     if (input != null && input != "") {
         let url 
         try {
-            url = new URL(input);
+            url = new URL(location.origin,input);
         } catch (e){} 
         
         if (url) {
