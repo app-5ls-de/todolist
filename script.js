@@ -525,3 +525,49 @@ a.addEventListener("click", (e) => {
     showTodos()
 })
 mount(div_filters,a)
+
+
+function saveFile(string) {
+    const blob = new Blob([string], { type: 'application/plain' });
+        let filename = "todo.txt"
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }, 0)
+    }
+}
+
+ 
+document.getElementById("download").addEventListener("click", (e) => {
+    let file = []
+    for (const id in state.todos) {
+        if (state.todos.hasOwnProperty(id)) {
+            const element = state.todos[id];
+            file.push(element.todo)
+        }
+    }
+    if (file.length) {
+        file.sort()
+        saveFile(file.join('\n'))
+    }
+})
+
+
+let fileSelector = document.getElementById('file-upload');
+fileSelector.addEventListener('change', (event) => {
+    const fileList = event.target.files
+    console.log(fileList)
+})
+
+document.getElementById("upload").addEventListener("click", (e) => {
+    fileSelector.style.display = "inline-block"
+})

@@ -157,3 +157,10 @@ body, a {
     background: transparent;
     border: none;
 }
+
+.buttons #file-upload {
+    display: none;
+    border: solid red;
+    padding: 0.5rem;
+}
+
