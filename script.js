@@ -15,7 +15,7 @@ function random_uuid() {
 function random_id() {
     let length = 20
     let result = [],
-    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
     for (let i = 0; i < length; i++) {
         result.push(characters.charAt(Math.floor(Math.random() * characters.length)))
     }
