@@ -22,6 +22,26 @@ function random_id() {
     return result.join('')
 }
 
+
+function isvalid_uuid(uuid) {
+    if (!uuid) return false
+    if (typeof uuid != "string") return false
+    if (uuid.length = 0) return false
+
+    const regex_uuidv4 = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$", "i");
+
+    return regex_uuidv4.test(uuid)
+}
+
+function isvalid_id(id) {
+    if (!id) return false
+    if (typeof id != "string") return false
+    if (id.length < 20) return false
+    if ( id == "null" || id == "settings" || id.startsWith("name-")) return false
+
+    return true
+}
+
 var apiOrigin = "https://api.todo.app.5ls.de"
 
 var state = {
@@ -571,3 +591,34 @@ fileSelector.addEventListener('change', (event) => {
 document.getElementById("upload").addEventListener("click", (e) => {
     fileSelector.style.display = "inline-block"
 })
+
+document.getElementById("plus").addEventListener("click", (e) => {
+    var input = prompt("Please enter the new id or url:")
+    if (input != null && input != "") {
+        let url 
+        try {
+            url = new URL(input);
+        } catch (e){} 
+        
+        if (url) {
+            const params = url.searchParams
+            let id = params.get('id')
+            let key = params.get('pwd')
+
+            if (id && isvalid_id(id)) {
+                let redirect = window.location.origin + "/?id=" + id
+                if (key && isvalid_uuid(key)) {
+                    redirect += "&pwd=" + key
+                }
+                window.location.href = redirect
+            }
+        }
+
+        if (isvalid_id(input)) {
+            window.location.href = window.location.origin + "/?id=" + input
+        }
+
+        console.error("no valid id or url was entered")
+    }
+})
+
