@@ -242,7 +242,7 @@ function createTodo(array,id) {
     div_todo.addEventListener('dblclick', function (e) {
         if (this.getAttribute("contenteditable")=="true") return
         this.classList.add("edit")
-        // this.innerText = tostring(array)
+        
 
         this.setAttribute("contenteditable", "true")
         this.focus()
@@ -253,8 +253,10 @@ function createTodo(array,id) {
                 return false
             }
         })
-        let newContent = ""
 
+        let oldContent = this.innerText
+        let newContent = this.innerText
+        
         this.addEventListener('input', function (e) {
             newContent = this.innerText
         })
@@ -262,16 +264,17 @@ function createTodo(array,id) {
         this.addEventListener('blur',function (e) {
             this.setAttribute("contenteditable", "false")
             this.classList.remove("edit")
-
             newContent = stripWhitespace(newContent)
             if (newContent){
-                setRemoteData('PUT',newContent,id)
-
-                addTodo(newContent,id)
-                showTodos()
+                if (newContent != oldContent) {
+                    setRemoteData('PUT',newContent,id)
+                    addTodo(newContent,id)
+                    showTodos()
+                }
             } else {
                 setRemoteData('DELETE',"",id)
                 addTodo("",id)
+                showTodos()
             }
         })
     })
