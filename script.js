@@ -84,6 +84,7 @@ function setRemoteData(method, todo, id) {
             console.log(response)
             if (method =='POST') {
                 addTodo(response.todo,response._id)
+                showTodos()
             }           
         
         })
