@@ -149,6 +149,11 @@ body, a {
     background-color: #ff980091;
 }
 
-.filter {
-    display: none;
+.buttons svg {
+    width: 1rem;
+}
+
+.buttons button {
+    background: transparent;
+    border: none;
 }

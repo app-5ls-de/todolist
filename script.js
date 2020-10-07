@@ -324,6 +324,7 @@ function showTodos() {
             let show = true
             if (state.filter.project.length && !overlap(state.filter.project,projects)) show = false
             if (state.filter.context.length && !overlap(state.filter.context,contexts)) show = false
+            if (state.filter.filter.includes("only unchecked") && checked) show = false 
 
             if (show) {
                 filtered.push(id)
@@ -386,11 +387,9 @@ function showTodos() {
         }
         a.addEventListener("click", (e) => {
             if (state.filter.project.includes(element)) {
-                //a.classList.remove("selected")
                 let index = state.filter.project.indexOf(element)
                 state.filter.project.splice(index,1)
             } else {
-                //a.classList.add("selected")
                 state.filter.project.push(element)
             }
             showTodos()
@@ -407,11 +406,9 @@ function showTodos() {
         }
         a.addEventListener("click", (e) => {
             if (state.filter.context.includes(element)) {
-                //a.classList.remove("selected")
                 let index = state.filter.context.indexOf(element)
                 state.filter.context.splice(index,1)
             } else {
-                //a.classList.add("selected")
                 state.filter.context.push(element)
             }
             showTodos()
@@ -510,3 +507,21 @@ for (const key in localStorage) {
         mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
     }
 }
+
+var div_filters = document.getElementById("filters")
+let a = el("a.option","only unchecked")
+if (state.filter.filter.includes("only unchecked")) {
+    a.classList.add("selected")
+}
+a.addEventListener("click", (e) => {
+    if (state.filter.filter.includes("only unchecked")) {
+        let index = state.filter.filter.indexOf("only unchecked")
+        state.filter.filter.splice(index,1)
+        a.classList.remove("selected")
+    } else {
+        state.filter.filter.push("only unchecked")
+        a.classList.add("selected")
+    }
+    showTodos()
+})
+mount(div_filters,a)
