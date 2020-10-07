@@ -62,7 +62,6 @@ body, a {
 
 .main {
     flex-grow: 1;
-    margin-right: 1rem;
 }
 
 .side:hover {
@@ -170,10 +169,6 @@ body, a {
     .container {
         margin: 3rem;
     }
-
-    .main {
-        margin-right: 3rem;
-    }
 }
 
 
@@ -185,6 +180,10 @@ body, a {
 
     .divider {
         display: none;
+    }
+
+    .main {
+        margin-right: 3rem;
     }
 }
 
