@@ -622,3 +622,79 @@ document.getElementById("plus").addEventListener("click", (e) => {
     }
 })
 
+
+btn_share = document.getElementById("share")
+btn_share.addEventListener("click", (e) => {
+    let url = window.location.origin + "/?id=" + state.id
+    if (state.key) {
+        url += "&pwd=" + state.key
+    }
+    share(url,state.id,btn_share.children[0])
+})
+
+
+
+function copyTextToClipboard(text, referenceElement) { // https://deanmarktaylor.github.io/clipboard-test/
+    function showTooltip(DomElement) {
+        DomElement.style.fill = "green"
+        setTimeout(function () {
+            DomElement.style.fill = "black"
+        }, 1000)
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            if (successful) {
+                showTooltip(referenceElement)
+            } else {
+                console.log('Fallback: Copying text command was unsuccessful');
+            }
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function () {
+        /* console.log('Async: Copying to clipboard was successful!'); */
+        showTooltip(referenceElement)
+    }, function (err) {
+        fallbackCopyTextToClipboard(text);
+        console.error('Async: Could not copy text: ', err);
+    });
+}
+
+function share(url, title, referenceElement) {
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        })
+            .catch(console.error);
+    } else {
+        copyTextToClipboard(url, referenceElement)
+    }
+}
+
+
+
