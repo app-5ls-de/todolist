@@ -15,11 +15,33 @@ function random_uuid() {
 function random_id() {
     let length = 20
     let result = [],
-    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
     for (let i = 0; i < length; i++) {
         result.push(characters.charAt(Math.floor(Math.random() * characters.length)))
     }
     return result.join('')
+}
+
+
+function isvalid_uuid(uuid) {
+    if (!uuid) return false
+    if (typeof uuid != "string") return false
+    if (uuid.length = 0) return false
+
+    const regex_uuidv4 = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$", "i");
+
+    return regex_uuidv4.test(uuid)
+}
+
+function isvalid_id(id) {
+    if (!id) return false
+    if (typeof id != "string") return false
+    if (id.length < 20) return false
+    if ( id == "null" || id == "settings" || id.startsWith("name-")) return false
+    
+    const regex_id = new RegExp("^([a-z]|[0-9])+$");
+
+    return regex_id.test(id)
 }
 
 var apiOrigin = "https://api.todo.app.5ls.de"
@@ -426,12 +448,12 @@ var div_list = document.getElementById("todos")
 const params = new URL(location.href).searchParams
 state.id = params.get('id')
 
-if (!state.id) {
+if (!state.id || !isvalid_id(state.id)) {
     window.location.href = window.location.origin + "/?id=" + random_id() + "&pwd=" + random_uuid()
 }
 
 let key = params.get('pwd')
-if (key) {
+if (key && isvalid_uuid(key)) {
     state.key = key
     window.history.replaceState({}, document.title, "/?id=" + state.id)
     localStorage.setItem(state.id,key)
@@ -503,8 +525,11 @@ div_newTodo.addEventListener('blur',function (e) {
 var div_lists = document.getElementById("lists")
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
-        const element = localStorage[key];
-        mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
+        if (isvalid_id(key)) {
+            mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
+        } else {
+            localStorage.removeItem(key)
+        }
     }
 }
 
@@ -571,3 +596,110 @@ fileSelector.addEventListener('change', (event) => {
 document.getElementById("upload").addEventListener("click", (e) => {
     fileSelector.style.display = "inline-block"
 })
+
+document.getElementById("plus").addEventListener("click", (e) => {
+    var input = prompt("Please enter the new id or url:")
+    if (input != null && input != "") {
+        let url 
+        try {
+            url = new URL(input);
+        } catch (e){} 
+        
+        if (url) {
+            const params = url.searchParams
+            let id = params.get('id')
+            let key = params.get('pwd')
+
+            if (id && isvalid_id(id)) {
+                let redirect = window.location.origin + "/?id=" + id
+                if (key && isvalid_uuid(key)) {
+                    redirect += "&pwd=" + key
+                }
+                window.location.href = redirect
+            }
+        }
+
+        if (isvalid_id(input)) {
+            window.location.href = window.location.origin + "/?id=" + input
+        }
+
+        console.error("no valid id or url was entered")
+    }
+})
+
+
+btn_share = document.getElementById("share")
+if (state.id && state.key) {
+    btn_share.addEventListener("click", (e) => {
+        let url = window.location.origin + "/?id=" + state.id + "&pwd=" + state.key
+        share(url, state.id, btn_share.children[0])
+    })
+} else {
+    btn_share.remove()
+}
+
+
+function copyTextToClipboard(text, referenceElement) { // https://deanmarktaylor.github.io/clipboard-test/
+    function showTooltip(DomElement) {
+        DomElement.style.fill = "green"
+        setTimeout(function () {
+            DomElement.style.fill = "black"
+        }, 1000)
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            if (successful) {
+                showTooltip(referenceElement)
+            } else {
+                console.log('Fallback: Copying text command was unsuccessful');
+            }
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function () {
+        /* console.log('Async: Copying to clipboard was successful!'); */
+        showTooltip(referenceElement)
+    }, function (err) {
+        fallbackCopyTextToClipboard(text);
+        console.error('Async: Could not copy text: ', err);
+    });
+}
+
+function share(url, title, referenceElement) {
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        })
+            .catch(console.error);
+    } else {
+        copyTextToClipboard(url, referenceElement)
+    }
+}
+
+
+
