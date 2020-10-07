@@ -285,6 +285,7 @@ function addTodo(todo,id) {
     if (!id) console.error("no id")
     if (todo) {
         state.todos[id] = {}
+        state.todos[id].todo = todo
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
     } else {
@@ -332,18 +333,16 @@ function showTodos() {
 
 //sort
     // alphabetically
-   /*  filtered.sort((a,b) => {
-        if (a is less than b by some ordering criterion) {
-        return -1;
-        }
-        if (a is greater than b by the ordering criterion) {
-        return 1;
-        }
-        // a must be equal to b
-        return 0;
+    filtered.sort((a,b) => {
+        let todoA = state.todos[a].todo
+        let todoB = state.todos[b].todo
+        if (todoA < todoB) return -1
+        if (todoA > todoB) return 1
 
-    }) */
-    
+        // a must be equal to b
+        return 0
+    })
+        
 //show
     filtered.forEach(id => {
         if (state.todos.hasOwnProperty(id)) {
