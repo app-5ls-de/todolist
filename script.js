@@ -38,8 +38,10 @@ function isvalid_id(id) {
     if (typeof id != "string") return false
     if (id.length < 20) return false
     if ( id == "null" || id == "settings" || id.startsWith("name-")) return false
+    
+    const regex_id = new RegExp("^([a-z]|[0-9])+$");
 
-    return true
+    return regex_id.test(id)
 }
 
 var apiOrigin = "https://api.todo.app.5ls.de"
