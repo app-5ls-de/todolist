@@ -629,14 +629,14 @@ document.getElementById("plus").addEventListener("click", (e) => {
 
 
 btn_share = document.getElementById("share")
-btn_share.addEventListener("click", (e) => {
-    let url = window.location.origin + "/?id=" + state.id
-    if (state.key) {
-        url += "&pwd=" + state.key
-    }
-    share(url,state.id,btn_share.children[0])
-})
-
+if (state.id && state.key) {
+    btn_share.addEventListener("click", (e) => {
+        let url = window.location.origin + "/?id=" + state.id + "&pwd=" + state.key
+        share(url, state.id, btn_share.children[0])
+    })
+} else {
+    btn_share.remove()
+}
 
 
 function copyTextToClipboard(text, referenceElement) { // https://deanmarktaylor.github.io/clipboard-test/
