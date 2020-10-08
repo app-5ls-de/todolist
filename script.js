@@ -477,7 +477,7 @@ if (key && isvalid_uuid(key)) {
 }
 
 
-fetch(apiOrigin + '/' + state.id)
+fetch(apiOrigin + '/' + state.id + "?limit=1000")
         .then((response) => {
             if (response.ok) {
                 return Promise.resolve(response)
