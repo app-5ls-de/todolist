@@ -262,6 +262,8 @@ function createTodo(array,id) {
     }
     
     div_todo.addEventListener('dblclick', function (e) {
+        e.preventDefault()
+        
         if (this.getAttribute("contenteditable")=="true") return
         this.classList.add("edit")
         
