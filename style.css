@@ -1,6 +1,7 @@
 
 body, a {
     color: #394147;
+    overflow-wrap: break-word;
 }
 
 .progress { 
