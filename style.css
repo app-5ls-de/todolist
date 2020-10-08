@@ -189,9 +189,9 @@ body, a {
 }
 
 
-@media (pointer: fine) {
+/* @media (pointer: fine) {
     .side {
         opacity: 0;
         transition: opacity 0.3s;
     }
-}
+} */
