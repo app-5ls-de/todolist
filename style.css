@@ -1,6 +1,7 @@
 
 body, a {
     color: #394147;
+    overflow-wrap: break-word;
 }
 
 .progress { 
@@ -188,9 +189,9 @@ body, a {
 }
 
 
-@media (pointer: fine) {
+/* @media (pointer: fine) {
     .side {
         opacity: 0;
         transition: opacity 0.3s;
     }
-}
+} */

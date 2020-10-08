@@ -262,6 +262,8 @@ function createTodo(array,id) {
     }
     
     div_todo.addEventListener('dblclick', function (e) {
+        e.preventDefault()
+        
         if (this.getAttribute("contenteditable")=="true") return
         this.classList.add("edit")
         
@@ -365,6 +367,14 @@ function showTodos() {
         // a must be equal to b
         return 0
     })
+
+    //shuffle
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
         
 //show
     filtered.forEach(id => {
@@ -467,7 +477,7 @@ if (key && isvalid_uuid(key)) {
 }
 
 
-fetch(apiOrigin + '/' + state.id)
+fetch(apiOrigin + '/' + state.id + "?limit=1000")
         .then((response) => {
             if (response.ok) {
                 return Promise.resolve(response)
@@ -602,7 +612,7 @@ document.getElementById("plus").addEventListener("click", (e) => {
     if (input != null && input != "") {
         let url 
         try {
-            url = new URL(input);
+            url = new URL(location.origin,input);
         } catch (e){} 
         
         if (url) {
