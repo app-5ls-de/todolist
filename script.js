@@ -451,6 +451,10 @@ function showTodos() {
 }
 
 
+function setURL(url) {
+    localStorage.setItem("lastopened",url)
+    window.history.replaceState({}, document.title, url)
+}
 
 
 var div_list = document.getElementById("todos")
@@ -459,13 +463,18 @@ const params = new URL(location.href).searchParams
 state.id = params.get('id')
 
 if (!state.id || !isvalid_id(state.id)) {
-    window.location.href = window.location.origin + "/?id=" + random_id() + "&pwd=" + random_uuid()
+    let lastopened = localStorage.getItem("lastopened")
+    if (lastopened && new URL(lastopened).searchParams.has("id")) {
+        window.location.href = lastopened
+    } else {
+        window.location.href = window.location.origin + "/?id=" + random_id() + "&pwd=" + random_uuid()
+    }
 }
 
 let key = params.get('pwd')
 if (key && isvalid_uuid(key)) {
     state.key = key
-    window.history.replaceState({}, document.title, "/?id=" + state.id)
+    setURL("/?id=" + state.id)
     localStorage.setItem(state.id,key)
 } else {
     if (localStorage.getItem(state.id)){
@@ -476,6 +485,7 @@ if (key && isvalid_uuid(key)) {
     }
 }
 
+localStorage.setItem("lastopened",location.href)
 
 fetch(apiOrigin + '/' + state.id + "?limit=1000")
         .then((response) => {
@@ -538,6 +548,7 @@ for (const key in localStorage) {
         if (isvalid_id(key)) {
             mount(div_lists,el("a.option",{href: location.origin + "/?id=" + key, innerText: key}))
         } else {
+            if (key == "lastopened") continue
             localStorage.removeItem(key)
         }
     }
