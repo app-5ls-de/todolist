@@ -372,12 +372,45 @@ function showTodos() {
     }
 
 //sort
-    // alphabetically
+    // default
     filtered.sort((a,b) => {
-        let todoA = state.todos[a].todo
-        let todoB = state.todos[b].todo
-        if (todoA < todoB) return -1
-        if (todoA > todoB) return 1
+        let A
+        let B
+
+
+        // checked
+        A = state.todos[a].checked
+        B = state.todos[b].checked
+
+        if (A < B) return -1
+        if (A > B) return 1
+
+
+        // if only one has priority it is first
+        A = state.todos[a].priority
+        B = state.todos[b].priority
+
+        if (A && !B) return -1
+        if (!A && B) return 1
+
+        // priority
+        if (A < B) return -1
+        if (A > B) return 1
+
+        // if only one has (project or context) it is first
+        A = state.todos[a].projects.concat(state.todos[a].contexts)
+        B = state.todos[b].projects.concat(state.todos[b].contexts)
+
+        if (A.length && !B.length) return -1
+        if (!A.length && B.length) return 1
+
+        // alphabetically
+        A = state.todos[a].todo
+        B = state.todos[b].todo
+
+        if (A < B) return -1
+        if (A > B) return 1
+
 
         // a must be equal to b
         return 0
