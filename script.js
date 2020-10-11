@@ -312,6 +312,21 @@ function addTodo(todo,id) {
         state.todos[id].todo = todo
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
+
+        state.todos[id].projects = []
+        state.todos[id].contexts = []
+        state.todos[id].checked = false
+        state.todos[id].priority = ""
+        state.todos[id].array.forEach(element => {
+            if (typeof element == "object") {
+                let type = Object.keys(element)[0]
+                if (type == "priority") state.todos[id].priority = element[type]
+                if (type == "checked") state.todos[id].checked = true
+                if (type == "project") state.todos[id].projects.push(element[type])
+                if (type == "context") state.todos[id].contexts.push(element[type])    
+            }
+        })
+        
     } else {
         delete state.todos[id]
     }
