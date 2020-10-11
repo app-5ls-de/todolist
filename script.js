@@ -312,6 +312,27 @@ function addTodo(todo,id) {
         state.todos[id].todo = todo
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
+
+        state.todos[id].priority = ""
+        state.todos[id].checked = false
+        state.todos[id].completionDate = ""
+        state.todos[id].creationDate = ""
+        state.todos[id].projects = []
+        state.todos[id].contexts = []
+        state.todos[id].due = ""
+        state.todos[id].array.forEach(element => {
+            if (typeof element == "object") {
+                let type = Object.keys(element)[0]
+                if (type == "priority")       state.todos[id].priority = element[type]
+                if (type == "checked")        state.todos[id].checked = true
+                if (type == "completionDate") state.todos[id].completionDate = element[type]
+                if (type == "creationDate")   state.todos[id].creationDate = element[type]
+                if (type == "project")        state.todos[id].projects.push(element[type])
+                if (type == "context")        state.todos[id].contexts.push(element[type])    
+                if (type == "keyvalue" && element[type].key == "due") state.todos[id].due = element[type].value
+            }
+        })
+        
     } else {
         delete state.todos[id]
     }
@@ -357,12 +378,45 @@ function showTodos() {
     }
 
 //sort
-    // alphabetically
+    // default
     filtered.sort((a,b) => {
-        let todoA = state.todos[a].todo
-        let todoB = state.todos[b].todo
-        if (todoA < todoB) return -1
-        if (todoA > todoB) return 1
+        let A
+        let B
+
+
+        // checked
+        A = state.todos[a].checked
+        B = state.todos[b].checked
+
+        if (A < B) return -1
+        if (A > B) return 1
+
+
+        // if only one has priority it is first
+        A = state.todos[a].priority
+        B = state.todos[b].priority
+
+        if (A && !B) return -1
+        if (!A && B) return 1
+
+        // priority
+        if (A < B) return -1
+        if (A > B) return 1
+
+        // if only one has (project or context) it is first
+        A = state.todos[a].projects.concat(state.todos[a].contexts)
+        B = state.todos[b].projects.concat(state.todos[b].contexts)
+
+        if (A.length && !B.length) return -1
+        if (!A.length && B.length) return 1
+
+        // alphabetically
+        A = state.todos[a].todo
+        B = state.todos[b].todo
+
+        if (A < B) return -1
+        if (A > B) return 1
+
 
         // a must be equal to b
         return 0
