@@ -313,17 +313,23 @@ function addTodo(todo,id) {
         state.todos[id].array = parse(todo)
         state.todos[id].el = createTodo(state.todos[id].array,id)
 
+        state.todos[id].priority = ""
+        state.todos[id].checked = false
+        state.todos[id].completionDate = ""
+        state.todos[id].creationDate = ""
         state.todos[id].projects = []
         state.todos[id].contexts = []
-        state.todos[id].checked = false
-        state.todos[id].priority = ""
+        state.todos[id].due = ""
         state.todos[id].array.forEach(element => {
             if (typeof element == "object") {
                 let type = Object.keys(element)[0]
-                if (type == "priority") state.todos[id].priority = element[type]
-                if (type == "checked") state.todos[id].checked = true
-                if (type == "project") state.todos[id].projects.push(element[type])
-                if (type == "context") state.todos[id].contexts.push(element[type])    
+                if (type == "priority")       state.todos[id].priority = element[type]
+                if (type == "checked")        state.todos[id].checked = true
+                if (type == "completionDate") state.todos[id].completionDate = element[type]
+                if (type == "creationDate")   state.todos[id].creationDate = element[type]
+                if (type == "project")        state.todos[id].projects.push(element[type])
+                if (type == "context")        state.todos[id].contexts.push(element[type])    
+                if (type == "keyvalue" && element[type].key == "due") state.todos[id].due = element[type].value
             }
         })
         
