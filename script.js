@@ -44,7 +44,7 @@ function isvalid_id(id) {
     return regex_id.test(id)
 }
 
-var apiOrigin = "https://api.todo.app.5ls.de"
+var apiOrigin = "https://jsonbox.io"
 
 var state = {
     todos: {},
