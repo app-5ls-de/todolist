@@ -1,6 +1,6 @@
 {
-    "name": "Todo",
-    "short_name": "Todo",
+    "name": "Todolist",
+    "short_name": "Todolist",
     "icons": [
         {
             "src": "/icons/android-chrome-192x192.png",
@@ -21,7 +21,7 @@
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "description" : "Simple Todo",
+    "description" : "Simple Todolist",
     "start_url": "/",
     "display": "standalone"
 }
